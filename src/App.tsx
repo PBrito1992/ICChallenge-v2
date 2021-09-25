@@ -1,12 +1,27 @@
-import "./styles.css";
+import { connect, ConnectedProps } from 'react-redux';
+import "./styles.scss";
+import PostCreateContainer from './components/containers/post-create.container';
+import AppHeader from './components/containers/app-header';
+import PostListContainer from './components/containers/post-list.container';
 
-export default function App() {
+export function App(props: PropsFromRedux) {
+
   return (
-    <div className="App">
-      <h1>InnovationCast Discussion Challenge</h1>
-      <p>Filter discussion component: all posts / only validated posts </p>
-      <p>List of posts component </p>
-      <p>Create new post component</p>
+    <div className='container-fluid'>
+      <AppHeader />
+      {
+        !props.displayPostForm ?
+          <PostListContainer /> :
+          <PostCreateContainer />
+      }
     </div>
   );
 }
+
+const mapStateToProps = (store: any) => ({
+  displayPostForm: store.postFormState.toDisplay
+});
+
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>
+export default connector(App);
