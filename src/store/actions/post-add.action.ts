@@ -7,16 +7,9 @@ import { AxiosResponse } from 'axios';
 import { Action } from '../../models/action.model';
 
 export const addPost = (newPost: PostCreate) => {
-    
-    // return (dispatch: Dispatch) => PostService.createPost(newPost)
-    //     .then(({data}) => dispatch(addNewPost(data.posts)));
-
     return async (dispatch: Dispatch) => {
-        const serverResponse: AxiosResponse<Post> = await PostService.createPost(newPost);
-
-        console.log(serverResponse)
-
-        dispatch(newPostCreate(serverResponse.data));
+        const serverResponse: AxiosResponse<{posts: Post}> = await PostService.createPost(newPost);
+        dispatch(newPostCreate(serverResponse.data.posts));
     }
 }
 

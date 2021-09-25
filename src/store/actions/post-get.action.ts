@@ -6,9 +6,6 @@ import { AxiosResponse } from 'axios';
 import { Action } from '../../models/action.model';
 
 export const getPosts = (page: number, displayVerified: boolean) => {
-    // return (dispatch: Dispatch) => PostService.getPosts(page, displayVerified)
-    //     .then(({data}: {data: PostServerResponse}) => dispatch(setPosts(data)));
-
     return async (dispatch: Dispatch) => {
         const serverResponse: AxiosResponse<PostServerResponse> = 
             await PostService.getPosts(page, displayVerified);
