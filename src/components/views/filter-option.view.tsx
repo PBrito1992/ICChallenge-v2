@@ -7,7 +7,7 @@ interface FilterOptionPropsType{
 
 export const FilterOption = ({onClick, value}: FilterOptionPropsType) => {
     return (
-        <div className="custom-control custom-checkbox mt-3">
+        <div className="custom-control custom-checkbox btn-size">
             <input  type="checkbox" 
                     checked={value} 
                     className="custom-control-input" 

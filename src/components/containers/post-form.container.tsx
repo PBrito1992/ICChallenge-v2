@@ -1,14 +1,18 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import { PostCreateForm } from "../views/post-create-form.view";
 import { addPost } from '../../store/actions/post-add.action';
 import { PostCreate } from "../../models/post-create.model";
 
-export const PostCreateContainer = (props: PropsFromRedux) => {
+export const PostFormContainer = (props: PropsFromRedux) => {
 
-    const [formValue, setFormValue] = useState<PostCreate>({});
-    const { addPost } = props;
+    const [formValue, setFormValue] = useState<PostCreate>(new PostCreate());
+    const { isPostCreateSuccess, addPost } = props;
+
+    useEffect(() => {
+        isPostCreateSuccess && setFormValue(new PostCreate());
+    }, [isPostCreateSuccess]);
 
     const handleFormChange = ({ target }
             : {target: HTMLInputElement | HTMLTextAreaElement}) => {
@@ -24,13 +28,18 @@ export const PostCreateContainer = (props: PropsFromRedux) => {
         addPost(formValue);
     }
 
-    return <PostCreateForm  onChange={handleFormChange} 
+    return <PostCreateForm  formValue={formValue}
+                            onChange={handleFormChange} 
                             onSubmit={handleFormSubmit} />;
 }
+
+const mapStateToProps = (store: any) => ({
+    isPostCreateSuccess: store.popupState.isSuccess
+  });
 
 const mapDispatchToProps = (dispatch: Dispatch) => 
     bindActionCreators({ addPost }, dispatch);
 
-const connector = connect(null, mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>
-export default connector(PostCreateContainer);
+export default connector(PostFormContainer);

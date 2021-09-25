@@ -2,10 +2,10 @@ import { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import { Button } from "../views/button.view";
-import { FilterOption } from "../views/filter-option.view";
 import { getPosts } from '../../store/actions/post-get.action';
 import { displayPostForm } from '../../store/actions/display-form.action';
 import { changeFilterValue } from '../../store/actions/filter-changed.action';
+import FiltersContainer from "./filters.container";
 
 export const AppHeader = (props: PropsFromRedux) => {
 
@@ -13,7 +13,6 @@ export const AppHeader = (props: PropsFromRedux) => {
     const [createPost, setCreatePost] = useState<boolean>(false);
 
     const {
-        displayValidatedPosts, 
         displayCreationPosts,
         displayPostForm, 
         getPosts,  
@@ -32,37 +31,32 @@ export const AppHeader = (props: PropsFromRedux) => {
         changeFilterValue(target.checked);
         getPosts(1, target.checked);
     }
+    
 
     return (
         <header>
             <h1>Posts</h1>
-            <div>
-                <Button text={ !createPost ? 'Create Post' : 'View Posts'} 
-                        onClick={handleCreatePost} 
-                        btnClass='btn btn-primary' />
+            <Button text={ !createPost ? 'Create Post' : 'View Posts'} 
+                    onClick={handleCreatePost} 
+                    btnClass='btn btn-primary' />
 
-                {
-                    !displayCreationPosts ? 
-                        <Button text='Filter' 
-                                onClick={handleFilterDisplay} 
-                                btnClass='btn btn-primary ml-3' 
-                                icon='bi bi-filter' /> : 
-                        <></>
-                }
-                    
-            </div>
             {
-                displayFilter ? 
-                    <FilterOption onClick={handleFilterChanged} 
-                            value={displayValidatedPosts}/> : 
+                !displayCreationPosts ? 
+                    <Button text='Filter' 
+                            onClick={handleFilterDisplay} 
+                            btnClass='btn btn-primary ml-3' 
+                            icon='bi bi-filter' /> : 
                     <></>
             }
+           
+            <FiltersContainer   displayFilter={displayFilter} 
+                                onFilterChanged={handleFilterChanged}/>
+                
         </header>
     );
 }
 
 const mapStateToProps = (store: any) => ({
-    displayValidatedPosts: store.filterState.isValidated,
     displayCreationPosts: store.postFormState.toDisplay
   });
 
