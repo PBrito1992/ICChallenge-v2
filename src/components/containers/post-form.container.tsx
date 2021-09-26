@@ -4,6 +4,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import { PostCreateForm } from "../views/post-create-form.view";
 import { addPost } from '../../store/actions/post-add.action';
 import { PostCreate } from "../../models/post-create.model";
+import { StoreType } from "../../models/redux-store.model";
 
 export const PostFormContainer = (props: PropsFromRedux) => {
 
@@ -33,7 +34,7 @@ export const PostFormContainer = (props: PropsFromRedux) => {
                             onSubmit={handleFormSubmit} />;
 }
 
-const mapStateToProps = (store: any) => ({
+const mapStateToProps = (store: StoreType) => ({
     isPostCreateSuccess: store.popupState.isSuccess
   });
 

@@ -7,7 +7,7 @@ import { postFormReducer } from './post-form.reducer';
 import { postsReducer } from './post.reducer';
 
 export const Reducers = combineReducers({
-    serverResponseState: postsReducer,
+    postsState: postsReducer,
     postFormState: postFormReducer,
     filterState: filterReducer,
     pageListState: pageListReducer,

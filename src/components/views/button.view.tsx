@@ -12,8 +12,8 @@ export const Button = ({ text, btnClass, icon, onClick}: ButtonPropsType) => {
         <button className={ btnClass + ' btn-size' } 
                 onClick={ onClick } >
             
-            { icon ? <i className={ icon }></i> : <></> } 
-            <span className={ icon ? 'ml-2': undefined }>{ text }</span>
+            { icon ? <i className={ icon + ' mr-2' }></i> : <></> } 
+            <span>{ text }</span>
         
         </button>
     );

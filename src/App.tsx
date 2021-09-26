@@ -6,7 +6,8 @@ import PostListContainer from './components/containers/post-list.container';
 import { Loading } from './components/views/loading.view';
 import { Popup } from './components/views/popup.view';
 import { bindActionCreators, Dispatch } from 'redux';
-import { displayPopup } from './store/actions/display-popup.action';
+import { closePopup } from './store/actions/display-popup.action';
+import { StoreType } from './models/redux-store.model';
 
 export function App(props: PropsFromRedux) {
 
@@ -14,40 +15,44 @@ export function App(props: PropsFromRedux) {
     displayPostForm, 
     isLoading, 
     popupData,
-    displayPopup } = props;
+    closePopup } = props;
 
   return (
-    <div className='container-fluid'>
+    <div className='container-fluid p-0'>
       {
         popupData.toDisplay ?
           <Popup message={popupData.message} 
                  isSuccess={popupData.isSuccess} 
-                 onClose={() => displayPopup(false)}/> :
+                 onClose={() => closePopup()}/> :
           <></>
       }
+
       <AppHeader />
-      {
-        !displayPostForm ?
-          <PostListContainer /> :
-          <PostFormContainer />
-      }
-      {
-        isLoading ?
-          <Loading /> :
-          <></>
-      }
+      
+      <div className='body p-3'>
+        {
+          !displayPostForm ?
+            <PostListContainer /> :
+            <PostFormContainer />
+        }
+        {
+          isLoading ?
+            <Loading /> :
+            <></>
+        }
+      </div>
     </div>
   );
 }
 
-const mapStateToProps = (store: any) => ({
-  displayPostForm: store.postFormState.toDisplay,
+const mapStateToProps = (store: StoreType) => ({
+  displayPostForm: store.postFormState.isFormDisplay,
   isLoading: store.loadingState.isLoading,
   popupData: store.popupState
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => 
-    bindActionCreators({ displayPopup }, dispatch);
+    bindActionCreators({ closePopup }, dispatch);
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;

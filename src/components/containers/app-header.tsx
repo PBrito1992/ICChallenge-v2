@@ -1,71 +1,74 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import { Button } from "../views/button.view";
 import { getPosts } from '../../store/actions/post-get.action';
-import { displayPostForm } from '../../store/actions/display-form.action';
-import { changeFilterValue } from '../../store/actions/filter-changed.action';
+import { displayForm, displayList } from '../../store/actions/display-form.action';
+import { displayAllPosts, displayValidPosts } from '../../store/actions/display-valid-posts.action';
 import FiltersContainer from "./filters.container";
+import { StoreType } from "../../models/redux-store.model";
 
 export const AppHeader = (props: PropsFromRedux) => {
 
     const [displayFilter, setDisplayFilter] = useState<boolean>(false);
-    const [createPost, setCreatePost] = useState<boolean>(false);
 
     const {
         displayCreationPosts,
-        displayPostForm, 
+        displayForm, 
+        displayList,
         getPosts,  
-        changeFilterValue} = props;
+        displayValidPosts,
+        displayAllPosts} = props;
+
+    useEffect(() => {
+        displayCreationPosts && setDisplayFilter(false);
+    }, [displayCreationPosts]);
 
     const handleFilterDisplay = () => 
         setDisplayFilter((prevDisplayFilter) => !prevDisplayFilter);
 
     const handleCreatePost = () => 
-        setCreatePost((prevCreatePost: boolean) => {
-            displayPostForm(!prevCreatePost);
-            return !prevCreatePost;
-        });
+        displayCreationPosts ? displayList() : displayForm();
         
     const handleFilterChanged = ({target}: {target: HTMLInputElement}) => {
-        changeFilterValue(target.checked);
+        target.checked ? 
+           displayValidPosts() :
+           displayAllPosts();
         getPosts(1, target.checked);
     }
-    
 
     return (
-        <header>
-            <h1>Posts</h1>
-            <Button text={ !createPost ? 'Create Post' : 'View Posts'} 
+        <header className='header p-3'>
+            <h1 className='display-4'>Posts</h1>
+            
+            <Button text={ !displayCreationPosts ? 'Create Post' : 'View Posts'} 
                     onClick={handleCreatePost} 
                     btnClass='btn btn-primary' />
 
-            {
-                !displayCreationPosts ? 
-                    <Button text='Filter' 
-                            onClick={handleFilterDisplay} 
-                            btnClass='btn btn-primary ml-3' 
-                            icon='bi bi-filter' /> : 
-                    <></>
-            }
+            <Button text='Filter' 
+                    onClick={handleFilterDisplay} 
+                    btnClass={ 'btn btn-primary ml-3' + 
+                        (displayCreationPosts ? ' invisible' : ' visible') } 
+                    icon='bi bi-filter' />  
            
             <FiltersContainer   displayFilter={displayFilter} 
-                                onFilterChanged={handleFilterChanged}/>
-                
+                                onFilterChanged={handleFilterChanged}/> 
         </header>
     );
 }
 
-const mapStateToProps = (store: any) => ({
-    displayCreationPosts: store.postFormState.toDisplay
+const mapStateToProps = (store: StoreType) => ({
+    displayCreationPosts: store.postFormState.isFormDisplay
   });
 
 const mapDispatchToProps = (dispatch: Dispatch) => 
     bindActionCreators(
         { 
-            displayPostForm,
-            changeFilterValue,
-            getPosts 
+            displayForm,
+            displayList,
+            displayValidPosts,
+            getPosts,
+            displayAllPosts 
         }, 
     dispatch);
 

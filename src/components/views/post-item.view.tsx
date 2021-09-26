@@ -16,7 +16,7 @@ export const PostItem = ({ post }: {post: PostModel}) => {
             
             <img    src={ userProfileImgUrl } 
                     alt={ userName } 
-                    className="mr-3 mt-3 rounded-circle profile-img" />
+                    className="mr-3 mt-3 rounded-circle profile-img-size" />
 
             <div className="media-body">
                 <h4 className='d-flex justify-content-between'>

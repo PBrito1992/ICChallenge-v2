@@ -7,7 +7,7 @@ interface PostCreateFormPropsType{
     onSubmit: FormEventHandler<HTMLFormElement>
 }
 
-export const PostCreateForm = ({formValue, onChange, onSubmit}: PostCreateFormPropsType) => {
+export const PostCreateForm = ({ formValue, onChange, onSubmit }: PostCreateFormPropsType) => {
 
     return (
         <form className='was-validated mt-3' onSubmit={onSubmit}>
