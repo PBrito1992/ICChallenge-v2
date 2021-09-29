@@ -13,7 +13,7 @@ export const postsReducer = (state = initialState, action: Action<PostServerResp
         case Actions.GET_POSTS:
             return updateGetPosts(state, action);
         case Actions.ADD_POST:
-            return updateNewPost(state, action);
+            return updateStateAfterNewPost(state, action);
         default:
             return state;
     }
@@ -36,15 +36,20 @@ const updateGetPosts = (state: PostsState, action: Action<PostServerResponse>) =
         }
 }
 
-const updateNewPost = (state: PostsState, action: Action<PostServerResponse>) => {
-    if(!!state.next_page)
-        return state;
+const updateStateAfterNewPost = 
+    (state: PostsState, {data}: Action<PostServerResponse>) => {
+
+    const newPosts = data.posts
+                        .filter(post => !state.posts
+                            .map(post => post.id)
+                            .includes(post.id));
 
     return {
         ...state,
+        ...data,
         posts: [
-            action.data,
-            ...state.posts
+            ...state.posts, 
+            ...newPosts
         ]
     };
 }

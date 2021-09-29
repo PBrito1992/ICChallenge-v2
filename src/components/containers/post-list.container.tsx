@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { getPosts } from '../../store/actions/post-get.action';
 import { useCallback, useEffect, useRef, useState } from "react";
-import { GroupedVirtuoso, GroupedVirtuosoHandle } from "react-virtuoso";
+import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import { StoreType } from "../../models/redux-store.model";
 
 export const PostListContainer = (props: PropsFromRedux) => {
@@ -14,12 +14,11 @@ export const PostListContainer = (props: PropsFromRedux) => {
         nextPage, 
         displayValidatedPosts,
         selectedPage,
-        totalPages,
         totalPosts,
         getPosts } = props;
 
     const [scroll, setScroll ] = useState(false);
-    const virtuoso = useRef<GroupedVirtuosoHandle>(null);
+    const virtuoso = useRef<VirtuosoHandle>(null);
     const page_size = 20;
 
     useEffect(() => { !isPostsLoaded && getPosts(1, false) }, []);
@@ -28,8 +27,11 @@ export const PostListContainer = (props: PropsFromRedux) => {
         if(!scroll || !virtuoso?.current)   
             return;
 
+        const header_height = 145;
+
         virtuoso.current.scrollToIndex({
-            align: 'center',
+            align: 'start',
+            offset: -header_height,
             index: (selectedPage - 1) * page_size,
         });
 
@@ -61,15 +63,13 @@ export const PostListContainer = (props: PropsFromRedux) => {
     };
 
     return (
-        <GroupedVirtuoso
+        <Virtuoso
             ref={virtuoso}
             useWindowScroll
-            groupCounts={Array(totalPages).fill(page_size)}
             data={posts}
             endReached={loadMore}
             overscan={200}
-            groupContent={ (index) => <span className='invisible'>Page { index }</span> }
-            itemContent={index => <PostItem post={posts[index]} key={`post_${posts[index].id}`} /> }
+            itemContent={(index, post) => <PostItem post={post} key={ index } /> }
         />
     );
 }
@@ -80,7 +80,6 @@ const mapStateToProps = (store: StoreType) => ({
     isPostsLoaded: store.postsState.isLoaded,
     displayValidatedPosts: store.filterState.isValidated,
     selectedPage: store.pageListState.selectedPage,
-    totalPages: store.postsState.total_pages,
     totalPosts: store.postsState.total
   });
   

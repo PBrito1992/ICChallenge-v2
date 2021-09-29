@@ -29,7 +29,7 @@ export function App(props: PropsFromRedux) {
 
       <AppHeader />
       
-      <div className='body p-3'>
+      <div className='p-3'>
         {
           !displayPostForm ?
             <PostListContainer /> :

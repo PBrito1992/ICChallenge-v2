@@ -7,6 +7,7 @@ import { displayForm, displayList } from '../../store/actions/display-form.actio
 import { displayAllPosts, displayValidPosts } from '../../store/actions/display-valid-posts.action';
 import FiltersContainer from "./filters.container";
 import { StoreType } from "../../models/redux-store.model";
+import { changeListPage } from '../../store/actions/list-page-change.action';
 
 export const AppHeader = (props: PropsFromRedux) => {
 
@@ -18,7 +19,8 @@ export const AppHeader = (props: PropsFromRedux) => {
         displayList,
         getPosts,  
         displayValidPosts,
-        displayAllPosts} = props;
+        displayAllPosts,
+        changeListPage } = props;
 
     useEffect(() => {
         displayCreationPosts && setDisplayFilter(false);
@@ -27,8 +29,15 @@ export const AppHeader = (props: PropsFromRedux) => {
     const handleFilterDisplay = () => 
         setDisplayFilter((prevDisplayFilter) => !prevDisplayFilter);
 
-    const handleCreatePost = () => 
-        displayCreationPosts ? displayList() : displayForm();
+    const handleCreatePost = () => {
+        if(!displayCreationPosts){
+            displayForm();
+            return;
+        } 
+        
+        changeListPage(1);
+        displayList();
+    }
         
     const handleFilterChanged = ({target}: {target: HTMLInputElement}) => {
         target.checked ? 
@@ -68,7 +77,8 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
             displayList,
             displayValidPosts,
             getPosts,
-            displayAllPosts 
+            displayAllPosts,
+            changeListPage 
         }, 
     dispatch);
 

@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useEffect, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import { Checkbox } from "../views/checkbox.view";
@@ -32,6 +32,11 @@ export const FiltersContainer = (props: FiltersPropsType) => {
         setPageOptions(options);
     }, [totalPages]);
 
+    const handleFilterChanged = (e: ChangeEvent<HTMLInputElement>) => {
+        changeListPage(1);
+        onFilterChanged(e);
+    }
+
     const handlePageChange = ({target}: {target: HTMLSelectElement}) => 
         changeListPage(+target.value);
 
@@ -39,7 +44,7 @@ export const FiltersContainer = (props: FiltersPropsType) => {
         <div className={'align-items-center mt-3' + filterDisplayClass}>
             <Checkbox   name='isValidated'
                         label='Display Validated Posts'
-                        onClick={onFilterChanged} 
+                        onClick={(e) => handleFilterChanged(e)} 
                         value={displayValidatedPosts} />
 
             <Select name='pages'        

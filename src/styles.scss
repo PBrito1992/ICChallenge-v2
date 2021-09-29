@@ -12,15 +12,11 @@
 .header{
   width: 100%;
   height: auto;
-  position: fixed;
+  position: sticky;
   top: 0;
   z-index: 2;
   background: white;
   box-shadow: 0 5px 10px -10px $bootstrap-blue;
-}
-
-.body{
-  margin-top: 145px;
 }
 
 .animate-filter-open{
